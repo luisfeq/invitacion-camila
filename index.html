@@ -391,6 +391,33 @@ html,body{width:100%;min-height:100%;background:var(--navy);font-family:var(--f-
   color:var(--br3);margin-bottom:24px;letter-spacing:.01em;
 }
 
+/* ── Photo medallion: gold double ring, above the name ── */
+.c-photo{display:flex;justify-content:center;margin:4px 0 20px}
+.c-photo-ring{
+  position:relative;
+  width:min(150px,40vw);height:min(150px,40vw);
+  border-radius:50%;
+  padding:5px;
+  background:linear-gradient(135deg,
+    #5c430a 0%,#8a6212 25%,#c4963c 48%,#a87a1c 60%,#8a6212 78%,#5c430a 100%);
+  background-size:250% 250%;
+  animation:ring-shine 6s ease-in-out infinite;
+  box-shadow:0 12px 32px rgba(38,18,0,.2),0 0 26px rgba(196,150,60,.18);
+}
+@keyframes ring-shine{
+  0%,100%{background-position:0% 0%}
+  50%{background-position:100% 100%}
+}
+/* outer halo ring */
+.c-photo-ring::after{
+  content:'';position:absolute;inset:-8px;border-radius:50%;
+  border:1px solid rgba(140,100,18,.35);pointer-events:none;
+}
+.c-photo-ring img{
+  width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;
+  border:2px solid rgba(250,245,236,.9);
+}
+
 /* ── Name: Great Vibes — the emotional heart of the card ── */
 .c-name{
   position:relative;display:inline-block;
@@ -712,6 +739,15 @@ html,body{width:100%;min-height:100%;background:var(--navy);font-family:var(--f-
 
     <h2 class="c c-event">Confirmación</h2>
     <p class="c c-eventsub">Eucaristía &nbsp;·&nbsp; Recepción</p>
+
+    <!-- foto de Camila — colocar camila.jpg junto a index.html;
+         si el archivo no existe, el medallón se oculta solo -->
+    <div class="c c-photo" id="photo-wrap">
+      <div class="c-photo-ring">
+        <img src="camila.jpg" alt="Camila Estefanía"
+             onerror="document.getElementById('photo-wrap').style.display='none'">
+      </div>
+    </div>
 
     <p class="c c-name">Camila Estefanía</p>
 
