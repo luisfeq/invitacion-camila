@@ -3,7 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<!-- evento privado: no indexar en buscadores -->
+<meta name="robots" content="noindex, nofollow">
 <title>Confirmación · Camila Estefanía</title>
+<!-- favicon: paloma dorada sobre noir -->
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%230c0908'/%3E%3Cpath transform='translate(8,14) scale(0.85)' fill='%23e8c060' d='M96 35C92 29 87 26 83 27C80 28 78 31 78 34C71 34 65 35 60 37C57 23 50 11 40 5C44 16 48 26 51 37C38 42 23 48 10 58C18 58 27 55 34 52C29 59 25 66 23 72C33 63 45 55 57 51C68 47 78 44 85 41L96 35Z'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Cinzel:wght@400;700;900&family=Cormorant+Garamond:ital,wght@0,300;1,300;1,400&family=Great+Vibes&family=Josefin+Sans:wght@100;200;300&display=swap" rel="stylesheet">
@@ -510,6 +514,24 @@ html,body{width:100%;min-height:100%;background:var(--navy);font-family:var(--f-
   font-size:clamp(13.5px,2vw,16px);color:var(--br3);margin-top:8px;
 }
 
+/* ── Padrinos ── */
+.c-padrinos{
+  margin:18px 0 10px;padding:22px 24px;
+  background:rgba(184,134,11,.065);
+  border:1px solid rgba(140,100,18,.28);border-radius:5px;
+}
+.c-pad-lbl{
+  font-family:var(--f-label);font-weight:300;
+  font-size:10px;letter-spacing:4px;text-transform:uppercase;
+  color:var(--gink);margin-bottom:12px;
+}
+/* Cinzel for names — serious, respectful weight */
+.c-pad-names{
+  font-family:var(--f-cinzel);font-weight:400;
+  font-size:clamp(13.5px,2.1vw,16px);color:var(--br);
+  line-height:1.9;letter-spacing:.02em;
+}
+
 /* ── Maps button ── */
 .c-btn{
   display:inline-flex;align-items:center;gap:8px;
@@ -547,6 +569,7 @@ html,body{width:100%;min-height:100%;background:var(--navy);font-family:var(--f-
   .c-ornbar-line{max-width:50px}
   .c-verse{padding:14px 14px}
   .c-block{padding:18px 16px 16px}
+  .c-padrinos{padding:18px 16px}
   .c-date{gap:12px}
   .c-count{gap:6px}
   .cd-box{padding:10px 4px 9px}
@@ -749,6 +772,15 @@ html,body{width:100%;min-height:100%;background:var(--navy);font-family:var(--f-
       <a class="c-btn" href="https://maps.app.goo.gl/qsewsDqCYaMCZZ8U6" target="_blank" rel="noopener">
         <span>📍</span> Cómo llegar
       </a>
+    </div>
+
+    <!-- padrinos -->
+    <div class="c c-padrinos">
+      <p class="c-pad-lbl">✦ &nbsp; Padrinos de Confirmación &nbsp; ✦</p>
+      <p class="c-pad-names">
+        Christian Quezada<br>
+        &amp; Andrea Reino
+      </p>
     </div>
 
     <div class="c c-div">
