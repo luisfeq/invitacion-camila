@@ -1,0 +1,1178 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Confirmación · Camila Estefanía</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Cinzel:wght@400;700;900&family=Cormorant+Garamond:ital,wght@0,300;1,300;1,400&family=Great+Vibes&family=Josefin+Sans:wght@100;200;300&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════════
+   TOKENS
+══════════════════════════════════════════ */
+:root{
+  /* ── Noir Dorado palette ── */
+  /* Backgrounds — all warm, no blue */
+  --navy:  #0c0908;
+  --dark1: #181310;
+  --dark2: #221c16;
+
+  /* Envelope — opaque warm charcoals, clear fold depth */
+  --e-base: #1c1510;
+  --e-flap: #242018;
+  --e-left: #110d08;
+  --e-right:#130f09;
+  --e-bot:  #0e0a06;
+
+  /* Champagne gold scale (less yellow, more refined) */
+  --g0:#7a5810; --g1:#c4963c; --g2:#d4a840;
+  --g3:#e8c060; --g4:#f0d880; --g5:#f8eeb8;
+
+  /* Card */
+  --pearl:#faf5ec; --cream:#f5edd8;
+  --br:#261200; --br2:#5c3a0a; --br3:#906018;
+  /* gold ink — dark antique gold, legible on pearl (labels, symbols on card) */
+  --gink:#8a6212;
+
+  /* ── Typography system ──
+     --f-cinzel-d  : CONFIRMACIÓN, display titles (Cinzel Decorative)
+     --f-cinzel    : section headings, values, formal text (Cinzel)
+     --f-script    : "Camila" — calligraphy name (Great Vibes)
+     --f-body      : quotes, descriptions, body (Cormorant Garamond italic)
+     --f-label     : tags, labels, small UI (Josefin Sans)
+  ── */
+  --f-cinzel-d: 'Cinzel Decorative', serif;
+  --f-cinzel:   'Cinzel', serif;
+  --f-script:   'Great Vibes', cursive;
+  --f-body:     'Cormorant Garamond', serif;
+  --f-label:    'Josefin Sans', sans-serif;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;min-height:100%;background:var(--navy);font-family:var(--f-label);font-weight:300;color:#f2e8d5;overflow-x:hidden}
+
+/* ══════════════════════════════════════════
+   BG CANVAS
+══════════════════════════════════════════ */
+#bg{position:fixed;inset:0;z-index:0;pointer-events:none}
+
+/* ══════════════════════════════════════════
+   GOLDEN GLOW OVERLAY (chandelier warmth)
+══════════════════════════════════════════ */
+#light-overlay{
+  position:fixed;inset:0;z-index:1;pointer-events:none;opacity:0;
+  background:
+    radial-gradient(ellipse 60% 60% at 50% -5%,
+      rgba(232,192,96,.2) 0%,
+      rgba(212,168,64,.06) 45%,
+      transparent 70%);
+}
+
+/* ══════════════════════════════════════════
+   LOADER
+══════════════════════════════════════════ */
+#loader{
+  position:fixed;inset:0;z-index:300;background:var(--navy);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:26px;
+}
+.ld-dove{
+  width:74px;height:60px;
+  fill:url(#goldGrad);
+  filter:drop-shadow(0 0 22px rgba(240,200,64,.85)) drop-shadow(0 0 60px rgba(240,180,40,.35));
+  animation:ld-beat 1.6s ease-in-out infinite;
+}
+@keyframes ld-beat{0%,100%{transform:scale(1);opacity:.55}50%{transform:scale(1.18);opacity:1}}
+.ld-track{width:150px;height:1px;background:rgba(240,200,64,.15)}
+.ld-fill{height:100%;background:linear-gradient(90deg,var(--g1),var(--g3),var(--g5));
+  width:0;animation:ld-grow 2.2s cubic-bezier(.4,0,.2,1) forwards}
+@keyframes ld-grow{to{width:100%}}
+
+/* ══════════════════════════════════════════
+   PHASE 1 — INTRO + ENVELOPE
+══════════════════════════════════════════ */
+#phase1{
+  position:relative;z-index:10;min-height:100vh;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:32px 20px 40px;gap:0;
+  opacity:0;visibility:hidden;
+  /* GPU layer for parallax */
+  transform:translateZ(0);
+}
+
+/* depth layers (parallax) */
+.dl{will-change:transform;transform:translateZ(0)}
+
+/* intro text */
+#intro{
+  text-align:center;margin-bottom:34px;
+  display:flex;flex-direction:column;align-items:center;gap:7px;
+}
+.i-tag{
+  font-family:var(--f-label);font-weight:200;
+  font-size:10px;letter-spacing:7px;text-transform:uppercase;color:var(--g3);
+  opacity:0;transform:translateY(-18px);will-change:transform,opacity;
+}
+.i-sub{
+  font-family:var(--f-body);
+  font-size:clamp(14px,2.3vw,18px);font-style:italic;font-weight:300;
+  color:rgba(242,232,213,.62);
+  opacity:0;transform:translateY(14px);will-change:transform,opacity;
+}
+.i-title{
+  font-family:var(--f-cinzel);
+  font-size:clamp(22px,4.8vw,52px);font-weight:700;line-height:1.25;
+  letter-spacing:.06em;
+  color:#f2e8d5;text-shadow:0 0 50px rgba(232,192,96,.2),0 2px 8px rgba(0,0,0,.5);
+  opacity:0;transform:translateY(20px);will-change:transform,opacity;
+}
+.i-de{
+  font-family:var(--f-body);
+  font-size:clamp(17px,2.6vw,24px);font-weight:300;font-style:italic;
+  color:var(--g3);opacity:0;will-change:opacity;
+}
+.i-name{
+  /* Great Vibes: flowing calligraphic gold — the name is personal, warm, distinctive */
+  font-family:var(--f-script);
+  font-size:clamp(44px,10vw,96px);font-weight:400;line-height:1.05;
+  padding-top:0.2em;
+  background:linear-gradient(135deg,
+    var(--g0) 0%,var(--g1) 10%,var(--g2) 25%,
+    var(--g3) 44%,var(--g4) 52%,var(--g5) 58%,
+    var(--g3) 70%,var(--g1) 84%,var(--g0) 100%);
+  background-size:220% auto;
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+  filter:drop-shadow(0 0 28px rgba(240,200,64,.55));
+  animation:shine 5s linear infinite;
+  opacity:0;transform:scale(.82);will-change:transform,opacity;
+}
+@keyframes shine{to{background-position:220% center}}
+.i-orn{
+  display:flex;align-items:center;gap:14px;opacity:0;will-change:opacity;
+}
+.i-orn::before,.i-orn::after{
+  content:'';width:50px;height:1px;
+  background:linear-gradient(90deg,transparent,var(--g2),transparent);
+}
+.i-orn-sym{display:flex;align-items:center;gap:10px}
+.i-orn-star{font-family:var(--f-cinzel);font-size:11px;color:var(--g2)}
+.orn-dove{
+  width:24px;height:20px;fill:var(--g2);
+  filter:drop-shadow(0 0 10px rgba(240,200,64,.55));
+}
+
+/* ══════════════════════════════════════════
+   ENVELOPE
+══════════════════════════════════════════ */
+#env-scene{display:flex;flex-direction:column;align-items:center;gap:20px}
+
+/* perspective parent — 3D tilt lives here */
+#envelope{
+  position:relative;
+  width:380px;height:260px;
+  cursor:pointer;
+  opacity:0;transform:translateY(28px) scale(.86);will-change:transform,opacity;
+  transform-style:preserve-3d;
+}
+@media(max-width:420px){
+  #envelope{width:300px;height:205px}
+  .e-fold-l,.e-fold-r{width:150px;height:205px}
+  .e-fold-b{width:300px;height:103px}
+  #e-flap{width:300px;height:103px}
+  .e-seam{top:103px}
+}
+
+/* float animation on inner */
+#env-inner{
+  position:absolute;inset:0;
+  animation:env-float 3.5s ease-in-out infinite;
+  transform-style:preserve-3d;
+}
+#env-inner.no-float{animation:none}
+@keyframes env-float{
+  0%,100%{transform:translateY(0) rotateZ(-.2deg)}
+  50%{transform:translateY(-13px) rotateZ(.2deg)}
+}
+
+/* ── ENVELOPE LAYERS — ALL position:absolute, ALL opaque warm charcoals ── */
+
+/* 1. Base rectangle */
+.e-body{
+  position:absolute;inset:0;
+  background:var(--e-base);
+  border-radius:3px;
+}
+
+/* 2. LEFT fold — warm dark charcoal triangle */
+.e-fold-l{
+  position:absolute;top:0;left:0;
+  width:190px;height:260px;
+  background:linear-gradient(to right,#0a0806,var(--e-left));
+  clip-path:polygon(0 0,0 100%,100% 50%);
+}
+/* 3. RIGHT fold */
+.e-fold-r{
+  position:absolute;top:0;right:0;
+  width:190px;height:260px;
+  background:linear-gradient(to left,#0a0806,var(--e-right));
+  clip-path:polygon(100% 0,100% 100%,0 50%);
+}
+/* 4. BOTTOM fold — darkest warm charcoal */
+.e-fold-b{
+  position:absolute;bottom:0;left:0;
+  width:380px;height:130px;
+  background:linear-gradient(to bottom,var(--e-bot),#070503);
+  clip-path:polygon(0 100%,100% 100%,50% 0%);
+}
+
+/* 5. TOP FLAP — slightly lighter charcoal, animated */
+#e-flap{
+  position:absolute;top:0;left:0;
+  width:380px;height:130px;
+  background:linear-gradient(160deg,#2e271e 0%,var(--e-flap) 50%,#1a1510 100%);
+  clip-path:polygon(0% 0%,100% 0%,50% 100%);
+  transform-origin:50% 0%;
+  will-change:transform;
+  z-index:4;
+  transform:translateZ(0);
+}
+
+/* 6. Champagne seam line */
+.e-seam{
+  position:absolute;top:130px;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent 4%,rgba(196,150,60,.35) 25%,rgba(196,150,60,.35) 75%,transparent 96%);
+  z-index:5;pointer-events:none;
+}
+@media(max-width:420px){.e-seam{top:103px}}
+
+/* 7. Champagne gold border overlay */
+.e-border{
+  position:absolute;inset:0;
+  border:1.5px solid rgba(196,150,60,.5);
+  border-radius:3px;
+  box-shadow:
+    0 28px 70px rgba(0,0,0,.8),
+    0 0 45px rgba(196,150,60,.08),
+    inset 0 0 40px rgba(0,0,0,.5);
+  z-index:9;pointer-events:none;
+  background:linear-gradient(160deg,rgba(255,240,200,.04) 0%,transparent 50%);
+}
+
+/* 8. Wax seal — "C" monogram */
+#e-seal{
+  position:absolute;
+  top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  width:66px;height:66px;border-radius:50%;
+  background:radial-gradient(circle at 36% 33%,#c01c1c 0%,#7a0000 50%,#420000 100%);
+  border:2.5px solid rgba(240,200,64,.7);
+  box-shadow:
+    0 0 0 5px rgba(50,0,0,.55),
+    0 0 22px rgba(180,0,0,.75),
+    0 0 50px rgba(240,200,64,.2),
+    inset 0 1px 4px rgba(255,255,255,.2);
+  display:flex;align-items:center;justify-content:center;
+  z-index:10;cursor:pointer;
+  transition:box-shadow .25s,transform .2s;
+  will-change:transform;
+}
+#e-seal:hover{
+  box-shadow:
+    0 0 0 5px rgba(50,0,0,.55),
+    0 0 35px rgba(240,200,64,.7),
+    0 0 80px rgba(240,200,64,.35),
+    inset 0 1px 4px rgba(255,255,255,.2);
+  transform:translate(-50%,-50%) scale(1.12);
+}
+.seal-mono{
+  font-family:var(--f-cinzel-d);font-size:26px;font-weight:700;
+  color:var(--g3);text-shadow:0 0 12px var(--g3),0 0 25px rgba(240,200,64,.6);
+  padding-bottom:2px;
+}
+
+/* hint */
+#hint{
+  font-family:var(--f-label);font-weight:200;
+  font-size:10px;letter-spacing:5px;text-transform:uppercase;
+  color:rgba(240,200,64,.45);opacity:0;
+  animation:hint-blink 2.6s ease-in-out infinite;
+}
+@keyframes hint-blink{0%,100%{opacity:.25}50%{opacity:.9}}
+
+/* ══════════════════════════════════════════
+   CONFETTI (created via JS)
+══════════════════════════════════════════ */
+.burst-dot{
+  position:fixed;pointer-events:none;z-index:200;
+}
+
+/* ══════════════════════════════════════════
+   PHASE 2 — INVITATION CARD
+══════════════════════════════════════════ */
+#phase2{
+  position:relative;z-index:10;display:none;
+  align-items:flex-start;justify-content:center;
+  padding:48px 20px 70px;
+}
+
+#card{
+  position:relative;
+  width:100%;max-width:490px;margin:0 auto;
+  background:linear-gradient(165deg,var(--pearl) 0%,#fffcf2 55%,var(--cream) 100%);
+  color:var(--br);border-radius:7px;
+  padding:58px 44px 54px;text-align:center;
+  box-shadow:
+    0 50px 120px rgba(0,0,0,.65),
+    0 0 0 1px rgba(180,130,10,.22),
+    0 0 90px rgba(240,200,64,.1),
+    inset 0 0 120px rgba(255,250,240,.3);
+  opacity:0;transform:scale(.85) translateY(24px);will-change:transform,opacity;
+  overflow:hidden;
+}
+
+/* Inner border frame */
+#card::before{
+  content:'';position:absolute;inset:14px;
+  border:1px solid rgba(184,134,11,.2);
+  border-radius:4px;pointer-events:none;z-index:0;
+}
+
+/* Watermark dove */
+.card-wm{
+  position:absolute;top:50%;left:50%;
+  transform:translate(-50%,-50%) rotate(-8deg);
+  pointer-events:none;z-index:0;user-select:none;
+}
+.wm-dove{width:360px;height:288px;fill:rgba(196,150,60,.06)}
+
+/* Corner L-brackets */
+.crn{position:absolute;width:36px;height:36px;pointer-events:none;z-index:1}
+.crn-tl{top:22px;left:22px;border-top:1.5px solid rgba(184,134,11,.4);border-left:1.5px solid rgba(184,134,11,.4)}
+.crn-tr{top:22px;right:22px;border-top:1.5px solid rgba(184,134,11,.4);border-right:1.5px solid rgba(184,134,11,.4)}
+.crn-bl{bottom:22px;left:22px;border-bottom:1.5px solid rgba(184,134,11,.4);border-left:1.5px solid rgba(184,134,11,.4)}
+.crn-br{bottom:22px;right:22px;border-bottom:1.5px solid rgba(184,134,11,.4);border-right:1.5px solid rgba(184,134,11,.4)}
+
+/* Card elements */
+.c{position:relative;z-index:1;opacity:0;transform:translateY(16px);will-change:transform,opacity}
+
+/* ── Ornament bar ── */
+.c-ornbar{
+  display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:30px;
+}
+.c-ornbar-line{flex:1;max-width:78px;height:1px;background:linear-gradient(90deg,transparent,var(--gink),transparent)}
+.ornbar-dove{
+  width:38px;height:31px;fill:url(#goldGradDark);
+  filter:drop-shadow(0 1px 6px rgba(138,98,18,.35));
+}
+
+/* ── Tag: Josefin Sans 200 — structural labels ── */
+.c-tag{
+  font-family:var(--f-label);font-weight:300;
+  font-size:10px;letter-spacing:6px;text-transform:uppercase;
+  color:var(--gink);margin-bottom:16px;
+}
+
+/* ── Intro body: Cormorant italic ── */
+.c-intro{
+  font-family:var(--f-body);
+  font-size:clamp(16px,2.5vw,20px);font-weight:300;font-style:italic;
+  color:var(--br2);line-height:1.9;margin-bottom:18px;
+}
+
+/* ── Main event title: Cinzel Decorative ── */
+.c-event{
+  font-family:var(--f-cinzel-d);
+  font-size:clamp(20px,3.8vw,30px);font-weight:700;
+  color:var(--br);line-height:1.3;letter-spacing:.03em;
+  margin-bottom:6px;
+}
+/* ── Subtitle: Cormorant italic small ── */
+.c-eventsub{
+  font-family:var(--f-body);
+  font-size:clamp(13px,2vw,16px);font-style:italic;font-weight:300;
+  color:var(--br3);margin-bottom:24px;letter-spacing:.01em;
+}
+
+/* ── Name: Great Vibes — the emotional heart of the card ── */
+.c-name{
+  position:relative;display:inline-block;
+  font-family:var(--f-script);
+  font-size:clamp(38px,8.5vw,60px);font-weight:400;line-height:1.1;
+  padding-top:0.18em;
+  /* dark bronze gradient — legible on pearl; the shine peak stays narrow */
+  background:linear-gradient(135deg,
+    #5c430a 0%,#7a5810 14%,#8a6212 30%,
+    #a87a1c 46%,#c4963c 52%,#a87a1c 58%,
+    #8a6212 72%,#7a5810 88%,#5c430a 100%);
+  background-size:220% auto;
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+  filter:drop-shadow(0 2px 10px rgba(38,18,0,.18));
+  animation:shine 4.5s linear infinite;
+  margin-bottom:26px;
+}
+.c-name::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(108deg,transparent 30%,rgba(255,255,255,.22) 50%,transparent 70%);
+  background-size:200% 100%;
+  animation:name-sweep 4s ease-in-out infinite;
+  pointer-events:none;
+}
+@keyframes name-sweep{0%{background-position:200% 0}100%{background-position:-200% 0}}
+
+/* ── Divider ── */
+.c-div{display:flex;align-items:center;gap:14px;margin:16px 0}
+.c-div-l{flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(180,130,10,.28),transparent)}
+.c-div-sym{
+  font-family:var(--f-label);font-weight:300;
+  font-size:11px;color:var(--gink);letter-spacing:5px;
+}
+.div-dove{width:20px;height:16px;fill:var(--gink);opacity:.9}
+
+/* ── Phrase: Cormorant italic — poetic, generous line-height ── */
+.c-verse{
+  font-family:var(--f-body);
+  font-size:clamp(16px,2.4vw,19.5px);font-weight:300;font-style:italic;
+  color:var(--br2);line-height:2;
+  padding:16px 22px;
+  background:rgba(184,134,11,.045);border-radius:3px;
+  border-left:2px solid rgba(184,134,11,.3);
+  border-right:2px solid rgba(184,134,11,.3);
+  margin:4px 0;
+}
+.c-verse-ref{
+  display:block;margin-top:10px;font-style:normal;
+  font-family:var(--f-label);font-weight:300;
+  font-size:10px;letter-spacing:3.5px;text-transform:uppercase;color:var(--gink);
+}
+
+/* ── Countdown ── */
+.cd-title{
+  font-family:var(--f-label);font-weight:300;
+  font-size:10px;letter-spacing:6px;text-transform:uppercase;
+  color:var(--gink);margin:14px 0 12px;
+}
+.c-count{display:flex;justify-content:center;gap:10px;margin-bottom:8px}
+.cd-box{
+  flex:1;max-width:88px;padding:13px 6px 11px;
+  border:1px solid rgba(140,100,18,.35);border-radius:4px;
+  background:rgba(184,134,11,.05);
+}
+.cd-num{
+  font-family:var(--f-cinzel);font-weight:700;
+  font-size:clamp(19px,4vw,27px);color:var(--br);line-height:1;
+  font-variant-numeric:tabular-nums;
+}
+.cd-lbl{
+  font-family:var(--f-label);font-weight:300;
+  font-size:9px;letter-spacing:2.5px;text-transform:uppercase;
+  color:var(--gink);margin-top:6px;
+}
+
+/* ── Formal date banner: SÁBADO | 04 | JULIO ── */
+.c-date{
+  display:flex;align-items:center;justify-content:center;gap:18px;
+  margin:18px 0 14px;
+}
+.c-date-side{
+  font-family:var(--f-cinzel);font-weight:400;
+  font-size:clamp(13px,2.2vw,17px);letter-spacing:.22em;text-transform:uppercase;
+  color:var(--br2);
+}
+.c-date-num{
+  font-family:var(--f-cinzel);font-weight:700;
+  font-size:clamp(40px,7.5vw,54px);line-height:1;color:var(--br);
+}
+.c-date-sep{width:1px;height:44px;background:linear-gradient(to bottom,transparent,rgba(184,134,11,.45),transparent)}
+.c-date-year{
+  font-family:var(--f-label);font-weight:300;
+  font-size:11px;letter-spacing:7px;color:var(--gink);margin-bottom:6px;
+}
+
+/* ── Event blocks: Eucaristía / Recepción ── */
+.c-block{
+  margin:14px 0;padding:22px 22px 20px;
+  background:rgba(184,134,11,.05);
+  border:1px solid rgba(140,100,18,.28);border-radius:5px;
+}
+.c-block-ico{
+  font-size:26px;line-height:1;margin-bottom:10px;
+}
+.c-block-lbl{
+  font-family:var(--f-label);font-weight:300;
+  font-size:10px;letter-spacing:4.5px;text-transform:uppercase;
+  color:var(--gink);margin-bottom:12px;
+}
+.c-block-time{
+  font-family:var(--f-cinzel);font-weight:700;
+  font-size:clamp(16px,2.8vw,20px);color:var(--br);letter-spacing:.04em;
+}
+.c-block-place{
+  font-family:var(--f-cinzel);font-weight:400;
+  font-size:clamp(13px,2.1vw,15.5px);color:var(--br);
+  margin-top:6px;line-height:1.5;letter-spacing:.02em;
+}
+.c-block-note{
+  font-family:var(--f-body);font-style:italic;font-weight:300;
+  font-size:clamp(13.5px,2vw,16px);color:var(--br3);margin-top:8px;
+}
+
+/* ── Maps button ── */
+.c-btn{
+  display:inline-flex;align-items:center;gap:8px;
+  font-family:var(--f-cinzel);font-weight:700;
+  font-size:11px;letter-spacing:2.5px;text-transform:uppercase;
+  color:var(--br2);text-decoration:none;
+  margin-top:16px;
+  padding:11px 24px;border:1px solid rgba(140,100,18,.5);border-radius:3px;
+  background:linear-gradient(160deg,rgba(184,134,11,.09),rgba(184,134,11,.03));
+  transition:box-shadow .3s,transform .25s,background .3s;
+}
+.c-btn span{font-size:15px;line-height:1}
+.c-btn:hover{
+  background:linear-gradient(160deg,rgba(184,134,11,.16),rgba(184,134,11,.06));
+  box-shadow:0 6px 24px rgba(184,134,11,.25),0 0 0 1px rgba(184,134,11,.2);
+  transform:translateY(-2px);
+}
+
+/* ── Signature ── */
+.c-sig{
+  font-family:var(--f-body);
+  font-size:clamp(16px,2.3vw,19px);font-style:italic;font-weight:300;
+  color:var(--br2);margin-top:28px;line-height:1.7;
+}
+/* Cinzel for family name — the final formal statement */
+.c-family{
+  font-family:var(--f-cinzel);
+  font-size:clamp(16px,2.8vw,21px);font-weight:700;
+  color:var(--br);margin-top:6px;letter-spacing:.06em;line-height:1.6;
+}
+
+/* responsive */
+@media(max-width:420px){
+  #card{padding:42px 24px 40px}
+  .c-ornbar-line{max-width:50px}
+  .c-verse{padding:14px 14px}
+  .c-block{padding:18px 16px 16px}
+  .c-date{gap:12px}
+  .c-count{gap:6px}
+  .cd-box{padding:10px 4px 9px}
+  .wm-dove{width:280px;height:224px}
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════
+     SVG DEFS — gold gradient + dove symbol
+══════════════════════════════════ -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="goldGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%"  stop-color="#c4963c"/>
+      <stop offset="45%" stop-color="#e8c060"/>
+      <stop offset="60%" stop-color="#f8eeb8"/>
+      <stop offset="100%" stop-color="#c4963c"/>
+    </linearGradient>
+    <!-- dark variant — for gold elements over the light card -->
+    <linearGradient id="goldGradDark" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%"  stop-color="#5c430a"/>
+      <stop offset="45%" stop-color="#8a6212"/>
+      <stop offset="60%" stop-color="#a87a1c"/>
+      <stop offset="100%" stop-color="#5c430a"/>
+    </linearGradient>
+    <!-- stylized dove in flight — the Confirmation motif, elegant not liturgical -->
+    <symbol id="dove" viewBox="0 0 100 80">
+      <path d="M96 35
+        C92 29 87 26 83 27
+        C80 28 78 31 78 34
+        C71 34 65 35 60 37
+        C57 23 50 11 40 5
+        C44 16 48 26 51 37
+        C38 42 23 48 10 58
+        C18 58 27 55 34 52
+        C29 59 25 66 23 72
+        C33 63 45 55 57 51
+        C68 47 78 44 85 41
+        L96 35 Z"/>
+    </symbol>
+  </defs>
+</svg>
+
+<canvas id="bg"></canvas>
+<div id="light-overlay"></div>
+
+<!-- LOADER -->
+<div id="loader">
+  <svg class="ld-dove"><use href="#dove"/></svg>
+  <div class="ld-track"><div class="ld-fill"></div></div>
+</div>
+<!-- preload Great Vibes so it's ready for reveal -->
+<span style="position:absolute;opacity:0;font-family:'Great Vibes';font-size:1px">Camila</span>
+
+<!-- ══════════════════════════════════
+     PHASE 1
+══════════════════════════════════ -->
+<div id="phase1">
+
+  <section id="intro">
+    <!-- depth layer 1 (slow) -->
+    <div class="dl" data-d="1.8">
+      <p class="i-tag">✦ &nbsp; Con inmensa alegría &nbsp; ✦</p>
+      <p class="i-sub">tienes el honor de ser testigo de la</p>
+    </div>
+    <!-- depth layer 2 (medium) -->
+    <div class="dl" data-d="3.5">
+      <h1 class="i-title">Confirmación</h1>
+    </div>
+    <!-- depth layer 3 (fast — closest) -->
+    <div class="dl" data-d="6">
+      <p class="i-de">de</p>
+      <h2 class="i-name">Camila Estefanía</h2>
+    </div>
+    <!-- ornament (very slow) -->
+    <div class="dl" data-d="1">
+      <div class="i-orn">
+        <span class="i-orn-sym">
+          <span class="i-orn-star">✦</span>
+          <svg class="orn-dove"><use href="#dove"/></svg>
+          <span class="i-orn-star">✦</span>
+        </span>
+      </div>
+    </div>
+  </section>
+
+  <div id="env-scene">
+    <div id="envelope">
+      <div id="env-inner">
+        <!-- base rectangle -->
+        <div class="e-body"></div>
+        <!-- opaque fold triangles -->
+        <div class="e-fold-l"></div>
+        <div class="e-fold-r"></div>
+        <div class="e-fold-b"></div>
+        <!-- animated flap -->
+        <div id="e-flap"></div>
+        <!-- seam line -->
+        <div class="e-seam"></div>
+        <!-- gold border overlay -->
+        <div class="e-border"></div>
+        <!-- wax seal — "C" monogram -->
+        <div id="e-seal"><span class="seal-mono">C</span></div>
+      </div>
+    </div>
+    <p id="hint">— Toca el sello para abrir —</p>
+  </div>
+
+</div>
+
+<!-- ══════════════════════════════════
+     PHASE 2
+══════════════════════════════════ -->
+<div id="phase2">
+  <div id="card">
+
+    <!-- decorative elements (not .c — always visible once card shows) -->
+    <div class="card-wm" aria-hidden="true">
+      <svg class="wm-dove"><use href="#dove"/></svg>
+    </div>
+    <div class="crn crn-tl"></div>
+    <div class="crn crn-tr"></div>
+    <div class="crn crn-bl"></div>
+    <div class="crn crn-br"></div>
+
+    <div class="c c-ornbar">
+      <div class="c-ornbar-line"></div>
+      <svg class="ornbar-dove"><use href="#dove"/></svg>
+      <div class="c-ornbar-line"></div>
+    </div>
+
+    <p class="c c-tag">Sacramento del Espíritu Santo</p>
+
+    <p class="c c-intro">
+      Con profunda alegría y la gracia de Dios,<br>
+      te invitamos a celebrar la
+    </p>
+
+    <h2 class="c c-event">Confirmación</h2>
+    <p class="c c-eventsub">Eucaristía &nbsp;·&nbsp; Recepción</p>
+
+    <p class="c c-name">Camila Estefanía</p>
+
+    <div class="c c-div">
+      <div class="c-div-l"></div>
+      <span class="c-div-sym">✦ &nbsp; ✦</span>
+      <div class="c-div-l"></div>
+    </div>
+
+    <div class="c c-verse">
+      "Recibiréis poder cuando el Espíritu Santo<br>venga sobre vosotros"
+      <span class="c-verse-ref">— Hechos 1:8</span>
+    </div>
+
+    <div class="c c-div">
+      <div class="c-div-l"></div>
+      <span class="c-div-sym">✦ &nbsp; ✦</span>
+      <div class="c-div-l"></div>
+    </div>
+
+    <!-- formal date banner -->
+    <p class="c c-date-year">2 0 2 6</p>
+    <div class="c c-date">
+      <span class="c-date-side">Sábado</span>
+      <span class="c-date-sep"></span>
+      <span class="c-date-num">04</span>
+      <span class="c-date-sep"></span>
+      <span class="c-date-side">Julio</span>
+    </div>
+
+    <!-- smart countdown: Eucaristía → Recepción -->
+    <p class="c cd-title" id="cd-title">✦ &nbsp; Faltan para la Eucaristía &nbsp; ✦</p>
+    <div class="c c-count">
+      <div class="cd-box"><div class="cd-num" id="cd-d">00</div><div class="cd-lbl">Días</div></div>
+      <div class="cd-box"><div class="cd-num" id="cd-h">00</div><div class="cd-lbl">Horas</div></div>
+      <div class="cd-box"><div class="cd-num" id="cd-m">00</div><div class="cd-lbl">Min</div></div>
+      <div class="cd-box"><div class="cd-num" id="cd-s">00</div><div class="cd-lbl">Seg</div></div>
+    </div>
+
+    <!-- event block: Eucaristía -->
+    <div class="c c-block">
+      <p class="c-block-ico">⛪</p>
+      <p class="c-block-lbl">Santa Eucaristía</p>
+      <div class="c-block-time">09h00</div>
+      <div class="c-block-place">Iglesia Cristo Salvador</div>
+      <a class="c-btn" href="https://maps.app.goo.gl/TNCCnVFrc5fsYeaK8" target="_blank" rel="noopener">
+        <span>📍</span> Cómo llegar
+      </a>
+    </div>
+
+    <!-- event block: Recepción -->
+    <div class="c c-block">
+      <p class="c-block-ico">🥂</p>
+      <p class="c-block-lbl">Recepción</p>
+      <div class="c-block-time">20h00</div>
+      <div class="c-block-place">Casa Comunal del Barrio Monay Chico</div>
+      <p class="c-block-note">Ofrecida con amor por sus padres</p>
+      <a class="c-btn" href="https://maps.app.goo.gl/qsewsDqCYaMCZZ8U6" target="_blank" rel="noopener">
+        <span>📍</span> Cómo llegar
+      </a>
+    </div>
+
+    <div class="c c-div">
+      <div class="c-div-l"></div>
+      <svg class="div-dove"><use href="#dove"/></svg>
+      <div class="c-div-l"></div>
+    </div>
+
+    <p class="c c-sig">Con amor y bendiciones de Dios, sus padres</p>
+    <p class="c c-family">Mauricio Quezada<br>&amp; Alexandra Gómez</p>
+
+  </div>
+</div>
+
+<!-- libs -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script>
+'use strict';
+
+/* ════════════════════════════════════════════
+   ⚙ DATOS DEL EVENTO — editar aquí
+════════════════════════════════════════════ */
+const DATE_EUCARISTIA = new Date('2026-07-04T09:00:00'); // Iglesia Cristo Salvador
+const DATE_RECEPCION  = new Date('2026-07-04T20:00:00'); // Casa Comunal Monay Chico
+
+/* ══════════════════════════════════════════════════════
+   THREE.JS — gold dust + champagne bubbles + chandelier glow
+══════════════════════════════════════════════════════ */
+(function(){
+  const canvas   = document.getElementById('bg');
+  const renderer = new THREE.WebGLRenderer({canvas, alpha:true, antialias:false});
+  renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+  renderer.setSize(innerWidth,innerHeight);
+
+  const scene  = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(65, innerWidth/innerHeight, 0.1, 1000);
+  camera.position.z = 6;
+
+  /* glow circle texture — champagne gold, no yellow */
+  function glowTexture(){
+    const sz=128, c=document.createElement('canvas');
+    c.width=c.height=sz;
+    const ctx=c.getContext('2d');
+    const g=ctx.createRadialGradient(sz/2,sz/2,0,sz/2,sz/2,sz/2);
+    g.addColorStop(0,   'rgba(240,200,100,1)');
+    g.addColorStop(.2,  'rgba(220,172,72,.88)');
+    g.addColorStop(.5,  'rgba(196,150,60,.38)');
+    g.addColorStop(.8,  'rgba(160,110,30,.1)');
+    g.addColorStop(1,   'rgba(120,80,10,0)');
+    ctx.fillStyle=g; ctx.fillRect(0,0,sz,sz);
+    return new THREE.CanvasTexture(c);
+  }
+  const glow = glowTexture();
+
+  /* dust particles */
+  const MOBILE = innerWidth<600;
+  const N = MOBILE ? 260 : 500;
+  const pos=new Float32Array(N*3), vel=[];
+
+  for(let i=0;i<N;i++){
+    pos[i*3]   = (Math.random()-.5)*26;
+    pos[i*3+1] = (Math.random()-.5)*22;
+    pos[i*3+2] = (Math.random()-.5)*10 - 1;
+    vel.push({
+      x:(Math.random()-.5)*.0038,
+      y:Math.random()*.008+.002,
+      z:(Math.random()-.5)*.0015
+    });
+  }
+
+  const geo=new THREE.BufferGeometry();
+  geo.setAttribute('position',new THREE.BufferAttribute(pos,3));
+  const mat=new THREE.PointsMaterial({
+    color:0xe8c060,
+    map:glow, size:MOBILE?.15:.11,
+    transparent:true, opacity:.82,
+    sizeAttenuation:true,
+    blending:THREE.AdditiveBlending, depthWrite:false
+  });
+  const dust=new THREE.Points(geo,mat);
+  scene.add(dust);
+
+  /* champagne bubbles — bright cream sparks rising fast with a gentle wobble */
+  const NB = MOBILE ? 90 : 170;
+  const posB=new Float32Array(NB*3), spdB=[], phB=[];
+  for(let i=0;i<NB;i++){
+    posB[i*3]   = (Math.random()-.5)*18;
+    posB[i*3+1] = (Math.random()-.5)*24;
+    posB[i*3+2] = (Math.random()-.5)*8 - 1;
+    spdB.push(.014+Math.random()*.022);
+    phB.push(Math.random()*Math.PI*2);
+  }
+  const geoB=new THREE.BufferGeometry();
+  geoB.setAttribute('position',new THREE.BufferAttribute(posB,3));
+  const matB=new THREE.PointsMaterial({
+    color:0xf8eeb8,
+    map:glow, size:MOBILE?.09:.07,
+    transparent:true, opacity:.75,
+    sizeAttenuation:true,
+    blending:THREE.AdditiveBlending, depthWrite:false
+  });
+  const bubbles=new THREE.Points(geoB,matB);
+  scene.add(bubbles);
+
+  /* bokeh planes — warm champagne */
+  const bokeh=[];
+  for(let i=0;i<9;i++){
+    const bG=new THREE.PlaneGeometry(1,1);
+    const bM=new THREE.MeshBasicMaterial({
+      color:0xd4a840,
+      map:glow,transparent:true,
+      opacity:.015+Math.random()*.035,
+      blending:THREE.AdditiveBlending,depthWrite:false
+    });
+    const m=new THREE.Mesh(bG,bM);
+    m.position.set((Math.random()-.5)*16,(Math.random()-.5)*12,(Math.random()-.5)*3-3);
+    m.scale.setScalar(3+Math.random()*7);
+    m.userData={spd:.15+Math.random()*.35, off:Math.random()*Math.PI*2};
+    scene.add(m); bokeh.push(m);
+  }
+
+  /* chandelier halos — layered warm glow breathing from above */
+  const halos=[];
+  [[9,.028,0xe8c060],[6,.05,0xf0d890],[3.2,.075,0xfff8e8]].forEach(([s,o,col],i)=>{
+    const m=new THREE.Mesh(
+      new THREE.PlaneGeometry(1,1),
+      new THREE.MeshBasicMaterial({color:col,map:glow,transparent:true,opacity:o,
+        blending:THREE.AdditiveBlending,depthWrite:false})
+    );
+    m.position.set(0,4.2,-1.5);
+    m.scale.setScalar(s);
+    m.userData={base:o,off:i*1.3};
+    scene.add(m); halos.push(m);
+  });
+
+  /* resize */
+  window.addEventListener('resize',()=>{
+    camera.aspect=innerWidth/innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(innerWidth,innerHeight);
+  });
+
+  /* loop */
+  let f=0;
+  (function loop(){
+    requestAnimationFrame(loop); f++;
+    const p=geo.attributes.position.array;
+    for(let i=0;i<N;i++){
+      p[i*3]+=vel[i].x; p[i*3+1]+=vel[i].y; p[i*3+2]+=vel[i].z;
+      if(p[i*3+1]>13){p[i*3+1]=-13; p[i*3]=(Math.random()-.5)*26;}
+    }
+    geo.attributes.position.needsUpdate=true;
+    dust.rotation.y+=.00018;
+
+    const pb=geoB.attributes.position.array;
+    for(let i=0;i<NB;i++){
+      pb[i*3+1]+=spdB[i];
+      pb[i*3]  +=Math.sin(f*.02+phB[i])*.004;
+      if(pb[i*3+1]>12){pb[i*3+1]=-12; pb[i*3]=(Math.random()-.5)*18;}
+    }
+    geoB.attributes.position.needsUpdate=true;
+
+    bokeh.forEach(b=>{
+      b.position.y+=Math.sin(f*.012*b.userData.spd+b.userData.off)*.003;
+      b.material.opacity=.02+Math.sin(f*.016+b.userData.off)*.025;
+    });
+    halos.forEach(h=>{
+      h.material.opacity=h.userData.base+Math.sin(f*.018+h.userData.off)*h.userData.base*.45;
+    });
+    renderer.render(scene,camera);
+  })();
+
+  /* expose camera for parallax */
+  window._threeCamera = camera;
+  window._threeRenderer = renderer;
+})();
+
+
+/* ══════════════════════════════════════════════════════
+   PARALLAX — mouse drives envelope tilt + text depth
+══════════════════════════════════════════════════════ */
+(function(){
+  const isTouchOnly = window.matchMedia('(hover:none)').matches;
+  if(isTouchOnly) return; // skip on touch-only devices
+
+  const envelope = document.getElementById('envelope');
+  const layers   = document.querySelectorAll('.dl');
+  let mx=0, my=0;
+
+  window.addEventListener('mousemove', e=>{
+    mx = (e.clientX/innerWidth  - .5); // -0.5 to 0.5
+    my = (e.clientY/innerHeight - .5); // -0.5 to 0.5
+
+    /* 3D tilt on envelope */
+    gsap.to(envelope,{
+      rotateY: mx * 16,
+      rotateX: my * -11,
+      duration: .7,
+      ease: 'power2.out',
+      transformPerspective: 1100,
+      transformOrigin: '50% 50%'
+    });
+
+    /* depth-layer parallax on intro text */
+    layers.forEach(layer=>{
+      const d = parseFloat(layer.dataset.d)||2;
+      gsap.to(layer,{
+        x: mx * -d * 6,
+        y: my * -d * 4,
+        duration: .65,
+        ease: 'power2.out'
+      });
+    });
+
+    /* subtle camera parallax in Three.js */
+    if(window._threeCamera){
+      const cam = window._threeCamera;
+      gsap.to(cam.position,{
+        x: mx * .5,
+        y: my * -.35,
+        duration: 1.2,
+        ease: 'power1.out'
+      });
+    }
+  });
+
+  /* reset on mouse leave */
+  document.addEventListener('mouseleave',()=>{
+    gsap.to(envelope,{rotateY:0,rotateX:0,duration:1.2,ease:'elastic.out(1,.5)',transformPerspective:1100});
+    layers.forEach(l=>gsap.to(l,{x:0,y:0,duration:1,ease:'power2.out'}));
+  });
+})();
+
+
+/* ══════════════════════════════════════════════════════
+   GOLD CONFETTI — on seal click
+══════════════════════════════════════════════════════ */
+function confettiBurst(cx, cy){
+  const COUNT = 44;
+  for(let i=0;i<COUNT;i++){
+    const el = document.createElement('div');
+    el.className = 'burst-dot';
+    const isRibbon = Math.random() < .55;
+    const w = isRibbon ? 3 + Math.random()*3 : 4 + Math.random()*5;
+    const h = isRibbon ? 8 + Math.random()*7 : w;
+    el.style.cssText = `
+      width:${w}px;height:${h}px;
+      border-radius:${isRibbon ? '1px' : '50%'};
+      background:hsl(${40+Math.random()*18},${80+Math.random()*20}%,${55+Math.random()*35}%);
+      left:${cx}px;top:${cy}px;
+    `;
+    document.body.appendChild(el);
+    const angle = (i/COUNT)*Math.PI*2 + Math.random()*.5;
+    const dist  = 70 + Math.random()*150;
+    gsap.to(el,{
+      x: Math.cos(angle)*dist,
+      y: Math.sin(angle)*dist + 60 + Math.random()*70, /* gravity drift */
+      rotation: (Math.random()-.5)*720,
+      opacity: 0, scale: .25,
+      duration: .9 + Math.random()*.8,
+      ease: 'power2.out',
+      onComplete(){ el.remove(); }
+    });
+  }
+}
+
+
+/* ══════════════════════════════════════════════════════
+   SMART COUNTDOWN — Eucaristía → Recepción → ¡Hoy celebramos!
+══════════════════════════════════════════════════════ */
+(function(){
+  const ids   = ['cd-d','cd-h','cd-m','cd-s'];
+  const title = document.getElementById('cd-title');
+
+  function tick(){
+    const now = Date.now();
+    let target, label;
+
+    if(now < DATE_EUCARISTIA){
+      target = DATE_EUCARISTIA;
+      label  = '✦   Faltan para la Eucaristía   ✦';
+    } else if(now < DATE_RECEPCION){
+      target = DATE_RECEPCION;
+      label  = '✦   Faltan para la Recepción   ✦';
+    } else {
+      target = null;
+      label  = '✦   ¡Hoy celebramos!   ✦';
+    }
+
+    if(title.textContent !== label) title.textContent = label;
+
+    const diff = target ? target - now : 0;
+    const vals = [
+      Math.floor(diff/864e5),
+      Math.floor(diff/36e5)%24,
+      Math.floor(diff/6e4)%60,
+      Math.floor(diff/1e3)%60
+    ];
+    vals.forEach((v,i)=>{
+      document.getElementById(ids[i]).textContent = String(v).padStart(2,'0');
+    });
+  }
+  tick();
+  setInterval(tick, 1000);
+})();
+
+
+/* ══════════════════════════════════════════════════════
+   GSAP — intro sequence
+══════════════════════════════════════════════════════ */
+(function(){
+
+  const p1   = document.getElementById('phase1');
+  const p2   = document.getElementById('phase2');
+  const lov  = document.getElementById('light-overlay');
+  const flap = document.getElementById('e-flap');
+  const seal = document.getElementById('e-seal');
+  const env  = document.getElementById('envelope');
+  const inner= document.getElementById('env-inner');
+
+  /* pre-set flap 3D */
+  gsap.set(flap,{ transformPerspective:1000, transformOrigin:'50% 0%', rotateX:0, z:0 });
+
+  /* ── intro timeline ── */
+  const tl = gsap.timeline({ delay:2.35, defaults:{ ease:'power3.out' } });
+
+  tl.to('#loader',{opacity:0,duration:.65,onComplete(){
+    document.getElementById('loader').style.display='none';
+  }});
+
+  tl.set(p1,{visibility:'visible'});
+  tl.to(p1,{opacity:1,duration:.35});
+
+  /* cascade */
+  tl.to('.i-tag',    {opacity:1,y:0,duration:.55},'-=.05');
+  tl.to('.i-sub',    {opacity:1,y:0,duration:.5 },'-=.25');
+  tl.to('.i-title',  {opacity:1,y:0,duration:.6,stagger:.18},'-=.15');
+  tl.to('.i-de',     {opacity:1,duration:.4},'-=.1');
+  tl.to('.i-name',   {opacity:1,scale:1,duration:.9,ease:'back.out(1.5)'},'-=.1');
+  tl.to('.i-orn',    {opacity:1,duration:.5},'-=.3');
+
+  /* envelope appears */
+  tl.to(env,{opacity:1,scale:1,y:0,duration:1,ease:'back.out(1.4)'},'-=.25');
+  tl.to('#hint',{opacity:1,duration:.6},'-=.2');
+  tl.to(lov,{opacity:1,duration:2.5},'-=2');
+
+
+  /* ── open sequence ── */
+  let opened = false;
+
+  function open(e){
+    if(opened) return;
+    opened = true;
+
+    /* gold confetti at seal position */
+    const sealRect = seal.getBoundingClientRect();
+    confettiBurst(
+      sealRect.left + sealRect.width/2,
+      sealRect.top  + sealRect.height/2
+    );
+
+    /* stop float */
+    inner.classList.add('no-float');
+
+    /* reset envelope tilt before opening */
+    gsap.to(env,{rotateX:0,rotateY:0,duration:.3,ease:'power2.inOut',transformPerspective:1100});
+
+    const otl = gsap.timeline();
+
+    otl.to('#hint',{opacity:0,duration:.2});
+
+    /* seal: swell then shatter */
+    otl.to(seal,{scale:1.45,duration:.16,ease:'power2.out',transformOrigin:'50% 50%'});
+    otl.to(seal,{scale:0,opacity:0,duration:.3,ease:'power2.in'});
+
+    /* flap opens — smooth 3D fold */
+    otl.to(flap,{
+      rotateX: -185,
+      duration: 1.05,
+      ease: 'power3.inOut'
+    },'-=.1');
+
+    /* tactile envelope shake */
+    otl.to(env,{x:-8,duration:.055},'<+=.5');
+    otl.to(env,{x:8, duration:.055});
+    otl.to(env,{x:-4,duration:.055});
+    otl.to(env,{x:0, duration:.055});
+
+    /* intro text drifts up */
+    otl.to('#intro',{y:-55,opacity:0,duration:.7,ease:'power2.in'},'-=.55');
+
+    /* envelope shrinks away */
+    otl.to(env,{scale:.5,y:-25,opacity:0,duration:.75,ease:'power2.in'},'<+=.2');
+
+    /* max light */
+    otl.to(lov,{opacity:1,duration:.5},'<');
+
+    /* switch phases */
+    otl.call(()=>{
+      p1.style.display = 'none';
+      p2.style.display = 'flex';
+      window.scrollTo(0,0);
+    });
+
+    /* card arrives */
+    otl.to('#card',{opacity:1,scale:1,y:0,duration:.95,ease:'back.out(1.25)'});
+
+    /* stagger card elements */
+    otl.to('.c',{opacity:1,y:0,duration:.5,stagger:.07,ease:'power2.out'},'-=.55');
+  }
+
+  ['click','touchend'].forEach(ev=>{
+    const opts = ev==='touchend' ? {passive:false} : {};
+    seal.addEventListener(ev, e=>{ if(ev==='touchend') e.preventDefault(); open(e); }, opts);
+    env.addEventListener(ev,  e=>{ if(ev==='touchend') e.preventDefault(); open(e); }, opts);
+  });
+
+})();
+</script>
+</body>
+</html>
